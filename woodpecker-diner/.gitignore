@@ -1,0 +1,10 @@
+node_modules/
+.next/
+out/
+.env*.local
+.vercel
+*.tsbuildinfo
+next-env.d.ts
+
+# data/ staat in de root-.gitignore van nanoclaw; deze site heeft de map wel nodig
+!data/
