@@ -1,0 +1,53 @@
+.hero {
+  min-height: calc(100svh - var(--nav-h));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  background: var(--creme);
+  padding: 56px 0 64px;
+}
+
+.headline {
+  font-size: clamp(48px, 9vw, 104px);
+  line-height: 0.95;
+  color: var(--brown);
+  margin: 18px 0 4px;
+}
+
+.sub {
+  margin-top: clamp(18px, 3.4vw, 48px);
+  font-size: clamp(20px, 4vw, 34px);
+  letter-spacing: 0.5em;
+  color: var(--orange);
+  text-transform: uppercase;
+  /* Compenseer de letter-spacing rechts van de laatste letter. */
+  text-indent: 0.5em;
+}
+
+.tagline {
+  max-width: 640px;
+  margin: 22px auto 0;
+  font-size: clamp(16px, 2vw, 18px);
+  font-weight: 300;
+  color: var(--brown);
+}
+
+.josper {
+  font-weight: 600;
+  color: var(--orange);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 30px;
+}
+
+.bird {
+  display: flex;
+  justify-content: center;
+  margin: 26px auto 0;
+}

@@ -1,0 +1,97 @@
+.footer {
+  background: var(--brown);
+  color: var(--creme);
+  padding: 48px 0 26px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 34px;
+}
+
+.merk {
+  font-size: 30px;
+  color: var(--creme-light);
+  line-height: 1;
+}
+
+.merkSub {
+  font-size: 12px;
+  letter-spacing: 0.28em;
+  color: var(--orange);
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.tagline {
+  margin-top: 14px;
+  max-width: 320px;
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(245, 230, 211, 0.78);
+}
+
+.social {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.social a {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 2px solid rgba(245, 230, 211, 0.28);
+  border-radius: 999px;
+  color: var(--creme);
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.social a:hover {
+  background: var(--orange);
+  border-color: var(--orange);
+  color: var(--creme-light);
+}
+
+.kop {
+  font-size: 21px;
+  color: var(--orange);
+  margin-bottom: 12px;
+}
+
+.lijst {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(245, 230, 211, 0.82);
+}
+
+.lijst li {
+  padding: 5px 0;
+}
+
+.lijst a:hover {
+  color: var(--orange);
+}
+
+.copy {
+  margin-top: 38px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(245, 230, 211, 0.18);
+  font-size: 12.5px;
+  font-weight: 300;
+  color: rgba(245, 230, 211, 0.62);
+}
+
+@media (max-width: 760px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}

@@ -1,0 +1,601 @@
+export type MenuType = 'lunch' | 'diner' | 'drinks'
+
+export type MenuItem = {
+  naam: string
+  /** Weglaten bij items zonder vaste prijs, zoals de wisseltap. */
+  prijs?: number
+  /** Tweede prijs, bijv. fles bij wijn of halve liter bij bier. */
+  prijsAlt?: number
+  beschrijving?: string
+  /** Smaakprofiel, alleen bij cocktails. */
+  smaak?: string
+  categorie: string
+  veg?: boolean
+  vegOptie?: boolean
+}
+
+export type MenuSection = {
+  titel: string
+  ondertitel: string
+  items: MenuItem[]
+}
+
+/** Toelichting bij de dubbele prijzen van een categorie. */
+export const CATEGORIE_PRIJSNOOT: Record<string, string> = {
+  'Draft Beer': 'vaasje / halve liter',
+  Sparkling: 'glas / fles',
+  White: 'glas / fles',
+  'Rosé': 'glas / fles',
+  Red: 'glas / fles',
+}
+
+export const MENU_DATA: Record<MenuType, MenuSection> = {
+  lunch: {
+    titel: 'Lunch',
+    ondertitel: 'Sandwiches, bites en zoet — dagelijks vanaf 12:00',
+    items: [
+      {
+        naam: 'Pastrami Sandwich',
+        prijs: 15.0,
+        beschrijving: 'Zuurdesem, Mosterdsaus, Zuurkool, Habanero Jus',
+        categorie: 'Lunch',
+      },
+      {
+        naam: 'Crispy Mushroom Bun',
+        prijs: 10.5,
+        beschrijving: 'Brioche Bun, Zwarte Peper & Miso Mayonnaise',
+        categorie: 'Lunch',
+        veg: true,
+      },
+      {
+        naam: 'Jalapeno Hotdog',
+        prijs: 11.5,
+        beschrijving: 'Relish, Gerookte Uien Mayonnaise, Aardappel Crisp',
+        categorie: 'Lunch',
+        vegOptie: true,
+      },
+      {
+        naam: 'Smoked Turkey Sandwich',
+        prijs: 10.5,
+        beschrijving: 'Bacon, Ranch Dressing, Ansjovis',
+        categorie: 'Lunch',
+      },
+      {
+        naam: 'Softshell Crab Sandwich',
+        prijs: 14.5,
+        beschrijving: 'Bacon, Koolsla, Citroenmayonnaise',
+        categorie: 'Lunch',
+      },
+      {
+        naam: 'Seasonal Turkey Salad',
+        prijs: 12.5,
+        beschrijving: 'Ook vegetarisch mogelijk',
+        categorie: 'Lunch',
+        vegOptie: true,
+      },
+      {
+        naam: 'Pastrami Sandwich',
+        prijs: 15.0,
+        beschrijving: 'Zuurdesem, Mosterd, Zuurkool, Habanero Jus',
+        categorie: 'Woodpecker Special',
+      },
+      {
+        naam: 'Shrimptoast',
+        prijs: 8.5,
+        beschrijving: 'Garnalen',
+        categorie: 'Bites',
+      },
+      {
+        naam: 'Seasoned Fries',
+        prijs: 6.0,
+        beschrijving: 'Met Kruiden Mayonnaise',
+        categorie: 'Bites',
+        veg: true,
+      },
+      {
+        naam: 'Fried Chicken',
+        prijs: 9.5,
+        beschrijving: 'Nashville Style',
+        categorie: 'Bites',
+      },
+      {
+        naam: 'Holtkamp Bitterbal',
+        prijs: 9.0,
+        beschrijving: '7 Stuks',
+        categorie: 'Bites',
+      },
+      {
+        naam: 'Fried Cheese Ball',
+        prijs: 7.5,
+        beschrijving: 'Vijf Stuks',
+        categorie: 'Bites',
+        veg: true,
+      },
+      {
+        naam: 'Banana Cheesecake',
+        prijs: 9.5,
+        beschrijving: 'Baskische stijl',
+        categorie: 'Pastries & Desserts',
+      },
+      {
+        naam: 'Stone Fruit',
+        prijs: 8.5,
+        beschrijving: 'Steenfruit, Yoghurt-Citroenijs, Basilicum Vinaigrette',
+        categorie: 'Pastries & Desserts',
+      },
+      {
+        naam: 'The Woodpecker Cookie Skillet',
+        prijs: 10.0,
+        beschrijving: 'Chocolate Chip Cookie, Vanille-ijs, Citrus Caramel',
+        categorie: 'Pastries & Desserts',
+      },
+      {
+        naam: 'French Toast & Blue Cheese',
+        prijs: 11.5,
+        beschrijving: 'Oudwijker Lazuli, Suikerbrood, Bramenijs',
+        categorie: 'Pastries & Desserts',
+      },
+    ],
+  },
+  diner: {
+    titel: 'Diner',
+    ondertitel: 'Van de Josper houtskooloven — bites, appetizers en mains',
+    items: [
+      {
+        naam: 'Shrimptoast',
+        prijs: 8.5,
+        beschrijving: 'Garnalen',
+        categorie: 'Bites',
+      },
+      {
+        naam: 'Seasoned Fries',
+        prijs: 6.0,
+        beschrijving: 'Met Kruiden Mayonnaise',
+        categorie: 'Bites',
+        veg: true,
+      },
+      {
+        naam: 'Fried Chicken',
+        prijs: 9.5,
+        beschrijving: 'Nashville Style',
+        categorie: 'Bites',
+      },
+      {
+        naam: 'Holtkamp Bitterbal',
+        prijs: 9.0,
+        beschrijving: '7 Stuks',
+        categorie: 'Bites',
+      },
+      {
+        naam: 'Fried Cheese Ball',
+        prijs: 7.5,
+        beschrijving: 'Vijf Stuks',
+        categorie: 'Bites',
+        veg: true,
+      },
+      {
+        naam: 'Chicharron',
+        prijs: 12.5,
+        beschrijving: 'Avocado, Piment',
+        categorie: 'Appetizers',
+      },
+      {
+        naam: 'Honey Tomatoes',
+        prijs: 12.5,
+        beschrijving: 'Pesto, Schuim van Olde Remeker',
+        categorie: 'Appetizers',
+        veg: true,
+      },
+      {
+        naam: 'Josper Grilled Shrimp',
+        prijs: 18.5,
+        beschrijving: 'Citroen Mayonnaise, Schuim van Gumbo, Chipolata',
+        categorie: 'Appetizers',
+      },
+      {
+        naam: 'Sweetbread and Waffles',
+        prijs: 16.5,
+        beschrijving: 'Maple Bacon Jus',
+        categorie: 'Appetizers',
+      },
+      {
+        naam: 'Courgette Flower',
+        prijs: 12.5,
+        beschrijving: 'Oudwijker Fiore',
+        categorie: 'Appetizers',
+        veg: true,
+      },
+      {
+        naam: 'Josper Grilled Cod Tail',
+        prijs: 24.5,
+        beschrijving: 'Knoflook Beurre Blanc',
+        categorie: 'Mains',
+      },
+      {
+        naam: 'Beef Cheek',
+        prijs: 27.5,
+        beschrijving: 'Knoflookcrème, Jus de Veau',
+        categorie: 'Mains',
+      },
+      {
+        naam: 'Half Roast Duck',
+        prijs: 32.5,
+        beschrijving: 'Jus van eend',
+        categorie: 'Mains',
+      },
+      {
+        naam: 'Dual-Purpose T-Bone Steak',
+        prijs: 90.0,
+        beschrijving: '1000 gram, Beurre Café de Paris, Jus de Veau',
+        categorie: 'Mains',
+      },
+      {
+        naam: 'Josper Grilled Flat Iron Steak',
+        prijs: 28.5,
+        beschrijving: 'Knoflookjus, Bieslook',
+        categorie: 'Mains',
+      },
+      {
+        naam: 'Mushroom Risotto',
+        prijs: 23.5,
+        beschrijving: 'Pruikzwam, Maitake, Gerookte Soya',
+        categorie: 'Mains',
+        veg: true,
+      },
+      {
+        naam: 'Gnocchi',
+        prijs: 13.5,
+        beschrijving: 'Snijbiet, Beurre Blanc',
+        categorie: 'Mains',
+        veg: true,
+      },
+      { naam: 'Risotto and Cheese', prijs: 8.5, categorie: 'Sides' },
+      { naam: 'White Bean Stew', prijs: 5.5, categorie: 'Sides' },
+      { naam: 'Potato Salad', prijs: 5.5, categorie: 'Sides' },
+      { naam: 'Seasoned Fries', prijs: 6.0, categorie: 'Sides' },
+      { naam: 'Roasted Vegetables', prijs: 6.6, categorie: 'Sides', veg: true },
+      { naam: 'Coleslaw', prijs: 4.5, categorie: 'Sides', veg: true },
+      { naam: 'Seasonal Salad', prijs: 6.5, categorie: 'Sides', veg: true },
+      {
+        naam: 'Banana Cheesecake',
+        prijs: 9.5,
+        beschrijving: 'Baskische stijl',
+        categorie: 'Pastries & Desserts',
+      },
+      {
+        naam: 'Stone Fruit',
+        prijs: 8.5,
+        beschrijving: 'Steenfruit, Yoghurt-Citroenijs, Basilicum Vinaigrette',
+        categorie: 'Pastries & Desserts',
+      },
+      {
+        naam: 'The Woodpecker Cookie Skillet',
+        prijs: 10.0,
+        beschrijving: 'Chocolate Chip Cookie, Vanille-ijs, Citrus Caramel',
+        categorie: 'Pastries & Desserts',
+      },
+      {
+        naam: 'French Toast & Blue Cheese',
+        prijs: 11.5,
+        beschrijving: 'Oudwijker Lazuli, Suikerbrood, Bramenijs',
+        categorie: 'Pastries & Desserts',
+      },
+    ],
+  },
+  drinks: {
+    titel: 'Drinks',
+    ondertitel: 'Cocktails die kloppen, wijn per glas en bier van de tap',
+    items: [
+      {
+        naam: 'Pornstar Martini',
+        prijs: 10.5,
+        smaak: 'Fruitig · Zoet · Zuur',
+        beschrijving: 'Passievrucht, Vodka, Vanille',
+        categorie: 'Cocktails',
+      },
+      {
+        naam: 'Pina Colada',
+        prijs: 10.5,
+        smaak: 'Romig · Fruitig',
+        beschrijving: 'Ananas, Kokos, Rum, Pandan',
+        categorie: 'Cocktails',
+      },
+      {
+        naam: 'Espresso Martini',
+        prijs: 10.5,
+        smaak: 'Kruidig · Zoet · Bitter',
+        beschrijving: 'Koffielikeur, Vodka, Espresso',
+        categorie: 'Cocktails',
+      },
+      {
+        naam: 'Old Fashioned',
+        prijs: 11.0,
+        smaak: 'Krachtig · Bitter',
+        beschrijving: 'Bourbon, Bitters, Suiker',
+        categorie: 'Cocktails',
+      },
+      {
+        naam: 'Basil Smash',
+        prijs: 10.5,
+        smaak: 'Fruitig · Kruidig · Fris',
+        beschrijving: 'Basilicum, Gin, Citroen',
+        categorie: 'Cocktails',
+      },
+      {
+        naam: 'Negroni',
+        prijs: 11.0,
+        smaak: 'Bitter · Kruidig',
+        beschrijving: 'Gin, Zoete Vermouth, Campari',
+        categorie: 'Cocktails',
+      },
+      {
+        naam: 'Tiki Zombie',
+        prijs: 10.5,
+        smaak: 'Fruitig · Krachtig',
+        beschrijving: 'Rum, Tropisch Fruit, Orgeat',
+        categorie: 'Cocktails',
+      },
+      {
+        naam: 'Cocktail van het moment',
+        beschrijving: 'Vraag het personeel',
+        categorie: 'Cocktails',
+      },
+      {
+        naam: 'Aperol Spritz',
+        prijs: 9.0,
+        smaak: 'Bitter · Zoet · Fris',
+        beschrijving: 'Aperol, Cava, Bruiswater',
+        categorie: 'Spritzers',
+      },
+      {
+        naam: 'Limoncello Spritz',
+        prijs: 9.0,
+        smaak: 'Zoet · Zuur · Fris',
+        beschrijving: 'Limoncello, Cava, Bruiswater',
+        categorie: 'Spritzers',
+      },
+      {
+        naam: 'Whisky Sour',
+        prijs: 10.5,
+        smaak: 'Zoet · Zuur',
+        beschrijving: 'Bourbon, Bitters, Citroen',
+        categorie: 'Sours',
+      },
+      {
+        naam: 'Amaretto Sour',
+        prijs: 10.5,
+        smaak: 'Bitter · Zoet',
+        beschrijving: 'Amaretto, Bourbon, Citroen',
+        categorie: 'Sours',
+      },
+      {
+        naam: 'Pornstar Martini',
+        prijs: 9.5,
+        smaak: 'Fruitig · Zoet · Zuur',
+        beschrijving: 'Passievrucht, Vanille, Limoen',
+        categorie: 'Mocktails',
+      },
+      {
+        naam: 'Clover Club',
+        prijs: 9.5,
+        smaak: 'Romig · Fris · Fruitig',
+        beschrijving: 'Framboos, Citroen',
+        categorie: 'Mocktails',
+      },
+      {
+        naam: 'Cola / Cola Zero / Sprite / Fanta / Cassis',
+        prijs: 3.6,
+        categorie: 'Soda',
+      },
+      {
+        naam: 'Lipton Icetea Sparkling / Peach / Green',
+        prijs: 3.6,
+        categorie: 'Soda',
+      },
+      {
+        naam: 'Royal Bliss Tonic / Bitter Lemon / Ginger Ale / Ginger Beer',
+        prijs: 3.8,
+        categorie: 'Soda',
+      },
+      { naam: 'Acqua Panna', prijs: 3.7, categorie: 'Soda' },
+      { naam: 'San Pellegrino', prijs: 3.7, categorie: 'Soda' },
+      { naam: 'Fristi / Chocomel', prijs: 3.9, categorie: 'Soda' },
+      { naam: 'Rivella', prijs: 3.8, categorie: 'Soda' },
+      {
+        naam: 'Bud Bier',
+        prijs: 3.3,
+        prijsAlt: 6.5,
+        categorie: 'Draft Beer',
+      },
+      {
+        naam: 'Stella Artois Bier',
+        prijs: 3.8,
+        prijsAlt: 7.5,
+        categorie: 'Draft Beer',
+      },
+      { naam: 'Tripel Karmeliet', prijs: 6.2, categorie: 'Draft Beer' },
+      { naam: 'Hertog Jan Weizener', prijs: 5.9, categorie: 'Draft Beer' },
+      { naam: 'Leffe Blond', prijs: 6.0, categorie: 'Draft Beer' },
+      {
+        naam: 'Wisseltap',
+        beschrijving: 'Zin in? Vraag naar wat er op de wisseltap staat',
+        categorie: 'Draft Beer',
+      },
+      { naam: 'Texels Skuumkoppe', prijs: 6.1, categorie: 'Bottled Beer' },
+      { naam: 'Hoegaarden Rosée Bier', prijs: 5.9, categorie: 'Bottled Beer' },
+      { naam: 'Hoegaarden Wit Bier', prijs: 5.8, categorie: 'Bottled Beer' },
+      {
+        naam: 'Stella Artois',
+        prijs: 4.0,
+        beschrijving: 'Alcoholvrij',
+        categorie: 'Bottled Beer',
+      },
+      {
+        naam: 'Leffe Blond',
+        prijs: 6.0,
+        beschrijving: 'Alcoholvrij',
+        categorie: 'Bottled Beer',
+      },
+      {
+        naam: 'Cava, El Casto',
+        prijs: 6.0,
+        prijsAlt: 34.0,
+        beschrijving: 'Reyes de Aragon Brut',
+        categorie: 'Sparkling',
+      },
+      {
+        naam: 'Champagne, Soutiran',
+        prijs: 79.5,
+        beschrijving: 'Blanc de Blanc NV — per fles',
+        categorie: 'Sparkling',
+      },
+      {
+        naam: 'Terre Cevico Primo',
+        prijs: 5.5,
+        beschrijving: 'Pinot Grigio',
+        categorie: 'White',
+      },
+      {
+        naam: 'Sancerre Le Grand Fricambault',
+        prijs: 56.0,
+        beschrijving: 'Sauvignon Blanc — per fles',
+        categorie: 'White',
+      },
+      {
+        naam: 'Bodegas Martúe',
+        prijs: 6.5,
+        prijsAlt: 32.5,
+        beschrijving: 'Blanco Nieva Verdejo',
+        categorie: 'White',
+      },
+      {
+        naam: 'Givry 1er Cru Les Galiattes',
+        prijs: 69.5,
+        beschrijving: 'Chardonnay — per fles',
+        categorie: 'White',
+      },
+      {
+        naam: 'Pfaff',
+        prijs: 7.0,
+        beschrijving: 'Grüner Veltliner',
+        categorie: 'White',
+      },
+      {
+        naam: 'Bodegas Paco Garcia',
+        prijs: 8.7,
+        prijsAlt: 43.5,
+        beschrijving: 'Tempranillo Blanco Rioja',
+        categorie: 'White',
+      },
+      {
+        naam: 'Domaine Luc Pirlet',
+        prijs: 6.0,
+        prijsAlt: 30.0,
+        beschrijving: 'Pinot Noir Rosé',
+        categorie: 'Rosé',
+      },
+      {
+        naam: 'Finca la Recorba Rosado',
+        prijs: 9.5,
+        prijsAlt: 47.5,
+        beschrijving: 'Tempranillo, Merlot, Albillo Mayor',
+        categorie: 'Rosé',
+      },
+      {
+        naam: 'Domaine Luc Pirlet',
+        prijs: 5.5,
+        prijsAlt: 27.5,
+        beschrijving: 'Malbec',
+        categorie: 'Red',
+      },
+      {
+        naam: 'Galante Appassimento',
+        prijs: 41.0,
+        beschrijving: 'Sangiovese — per fles',
+        categorie: 'Red',
+      },
+      {
+        naam: 'Reyes De Aragon',
+        prijs: 5.8,
+        prijsAlt: 29.0,
+        beschrijving: 'Garnacha',
+        categorie: 'Red',
+      },
+      {
+        naam: "La Gramolere Barolo '16",
+        prijs: 81.5,
+        beschrijving: 'Nebbiolo — per fles',
+        categorie: 'Red',
+      },
+      {
+        naam: 'Pradorey Adaro',
+        prijs: 10.0,
+        prijsAlt: 51.0,
+        beschrijving: 'Tempranillo',
+        categorie: 'Red',
+      },
+      {
+        naam: 'Andresen Port LBV',
+        prijs: 6.5,
+        beschrijving: 'Ruby',
+        categorie: 'Sweet',
+      },
+      {
+        naam: 'Les Fontenelles Moelleux',
+        prijs: 5.75,
+        beschrijving: 'Semillon, Sauvignon Blanc',
+        categorie: 'Sweet',
+      },
+      {
+        naam: 'Andresen Port Colheita',
+        prijs: 9.5,
+        beschrijving: 'Tawny',
+        categorie: 'Sweet',
+      },
+      { naam: 'Koffie', prijs: 3.0, categorie: 'Hot Drinks' },
+      { naam: 'Cappuccino', prijs: 3.2, categorie: 'Hot Drinks' },
+      { naam: 'Latte Macchiato', prijs: 3.6, categorie: 'Hot Drinks' },
+      { naam: 'Espresso', prijs: 2.9, categorie: 'Hot Drinks' },
+      { naam: 'Warme Chocolademelk', prijs: 3.4, categorie: 'Hot Drinks' },
+      { naam: 'Verse Munt / Gember Thee', prijs: 3.2, categorie: 'Hot Drinks' },
+      {
+        naam: 'Lipton Groen / Earl Grey / Rooibos Thee',
+        prijs: 3.0,
+        categorie: 'Hot Drinks',
+      },
+      {
+        naam: 'Irish Coffee',
+        prijs: 9.5,
+        beschrijving: 'Jameson',
+        categorie: 'Special Coffee',
+      },
+      {
+        naam: 'Italian Coffee',
+        prijs: 9.5,
+        beschrijving: 'Amaretto',
+        categorie: 'Special Coffee',
+      },
+      {
+        naam: 'Banana Cheesecake',
+        prijs: 7.5,
+        beschrijving: 'Baskische stijl',
+        categorie: 'Cakes',
+      },
+      { naam: 'Amaretto', prijs: 4.5, categorie: 'Spirits' },
+      { naam: 'Limoncello', prijs: 4.5, categorie: 'Spirits' },
+      { naam: 'Koffielikeur', prijs: 4.5, categorie: 'Spirits' },
+      {
+        naam: 'The Leith Distillery',
+        prijs: 5.5,
+        beschrijving: '"Table Whisky"',
+        categorie: 'Spirits',
+      },
+    ],
+  },
+}
+
+export const MENU_TABS: { key: MenuType; label: string }[] = [
+  { key: 'lunch', label: 'Lunch' },
+  { key: 'diner', label: 'Diner' },
+  { key: 'drinks', label: 'Drinks' },
+]
