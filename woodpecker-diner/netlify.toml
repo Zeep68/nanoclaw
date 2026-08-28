@@ -1,0 +1,8 @@
+# Zet in Netlify de base directory op "woodpecker-diner"; dit bestand wordt
+# vanuit die map gelezen.
+[build]
+  command = "npm run build"
+  publish = "out"
+
+[build.environment]
+  NODE_VERSION = "22"

@@ -4,7 +4,11 @@ import { useState } from 'react'
 import { RESERVERING_TIJDEN, SITE } from '@/data/site'
 import styles from './Reserve.module.css'
 
-type Status = 'idle' | 'versturen' | 'gelukt' | 'mislukt'
+type Status = 'idle' | 'versturen' | 'gelukt' | 'mail' | 'mislukt'
+
+// Optioneel endpoint (bijvoorbeeld een Odoo-webhook). Staat die er niet, dan
+// opent het formulier een vooringevulde mail.
+const WEBHOOK = process.env.NEXT_PUBLIC_RESERVATIONS_WEBHOOK_URL
 
 const LEEG = {
   date: '',
@@ -45,9 +49,16 @@ export default function Reserve() {
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
+
+    if (!WEBHOOK) {
+      window.location.href = mailtoLink(velden)
+      setStatus('mail')
+      return
+    }
+
     setStatus('versturen')
 
-    const res = await fetch('/api/reservations', {
+    const res = await fetch(WEBHOOK, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(velden),
@@ -163,6 +174,14 @@ export default function Reserve() {
                 <span className={styles.gelukt}>
                   Bedankt! We hebben je aanvraag ontvangen en bevestigen je tafel zo snel mogelijk
                   per mail.
+                </span>
+              )}
+              {status === 'mail' && (
+                <span className={styles.gelukt}>
+                  Je mailprogramma is geopend met je aanvraag erin — verstuur die mail, dan
+                  bevestigen we je tafel zo snel mogelijk. Gebeurde er niets?{' '}
+                  <a href={mailtoLink(velden)}>Open de mail opnieuw</a> of bel{' '}
+                  <a href={SITE.telefoonLink}>{SITE.telefoon}</a>.
                 </span>
               )}
               {status === 'mislukt' && (

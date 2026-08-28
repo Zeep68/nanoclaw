@@ -6,8 +6,9 @@ Next.js 15 (App Router) site voor The Woodpecker Diner in Dordrecht.
 
 ```bash
 npm install
-npm run dev      # http://localhost:3000
-npm run build && npm start
+npm run dev       # http://localhost:3000
+npm run build     # statische export naar out/
+npm run preview   # serveert out/ lokaal
 npm run lint
 npm run typecheck
 ```
@@ -19,7 +20,6 @@ npm run typecheck
 | `app/layout.tsx` | Fonts (Bebas Neue, Pacifico, Poppins via `next/font`), metadata |
 | `app/page.tsx` | Pagina-opbouw + JSON-LD `Restaurant` |
 | `app/globals.css` | Kleurvariabelen, knoppen, checkerboard-divider, formuliervelden |
-| `app/api/reservations/route.ts` | POST-endpoint voor reserveringen |
 | `components/` | Nav, Hero, MenuSection, About, Reserve, Footer, Bird |
 | `data/menu.ts` | Volledige lunch-, diner- en drinkskaart |
 | `data/site.ts` | Adres, telefoon, e-mail, openingstijden, reserveringstijden |
@@ -33,19 +33,28 @@ live gaat.
 
 ## Reserveringen
 
-Het formulier post naar `/api/reservations`. Zonder configuratie logt dat
-endpoint de aanvraag alleen en geeft het `200` terug. Zet
-`RESERVATIONS_WEBHOOK_URL` (en optioneel `RESERVATIONS_WEBHOOK_TOKEN`) om
-aanvragen door te sturen naar een backend zoals Odoo — zie `.env.example`.
+Het formulier draait volledig in de browser; er is geen server-side code.
 
-Geeft het endpoint een fout terug, dan toont het formulier een mailto-link met
-alle ingevulde gegevens plus het telefoonnummer, zodat een gast nooit vastloopt.
+Zonder configuratie opent een verzonden formulier de mailclient met alle
+ingevulde gegevens in een vooringevulde mail naar het adres uit `data/site.ts`.
+
+Later een Odoo-webhook toevoegen kan zonder de site te herbouwen als backend:
+zet `NEXT_PUBLIC_RESERVATIONS_WEBHOOK_URL` (zie `.env.example`) en het formulier
+post de aanvraag als JSON naar dat endpoint. Bij een fout valt het terug op
+dezelfde mailto plus het telefoonnummer. Twee aandachtspunten: de waarde wordt
+tijdens de build in de pagina gebakken, dus na wijzigen opnieuw builden, en het
+endpoint moet CORS voor het domein van de site toestaan.
 
 ## Deploy
 
-Vercel: root directory op `woodpecker-diner` zetten, framework wordt
-automatisch herkend. Eventuele webhook-variabelen als environment variables
-toevoegen.
+De build is een statische export (`output: 'export'`), dus er zijn geen
+serverless functies nodig.
+
+**Netlify** — base directory `woodpecker-diner`; `netlify.toml` in die map
+regelt de rest (`npm run build`, publish `out`).
+
+**Vercel** — root directory `woodpecker-diner`; de export wordt automatisch
+herkend.
 
 ## Gemeten (Lighthouse, mobile, productiebuild)
 

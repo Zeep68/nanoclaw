@@ -1,12 +1,9 @@
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  // De site staat in een submap van de nanoclaw-repo, die zelf ook een lockfile
-  // heeft; zonder dit kiest Next.js de verkeerde workspace root.
-  outputFileTracingRoot: path.dirname(fileURLToPath(import.meta.url)),
+  // Statische export: `next build` schrijft de hele site naar out/, zodat
+  // Netlify geen serverless functies nodig heeft.
+  output: 'export',
 }
 
 export default nextConfig
