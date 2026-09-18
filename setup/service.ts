@@ -68,25 +68,57 @@ export async function run(_args: string[]): Promise<void> {
   }
 }
 
+/**
+ * Detect other loaded launchd labels that look like a NanoClaw install but
+ * don't match the current canonical label. Leftovers like this happen after
+ * a manual rename (e.g. during a major-version migration) and mean two
+ * NanoClaw processes can end up running against the same database and
+ * channel session simultaneously. We only warn — unloading a service we
+ * don't fully recognize is not something to do automatically.
+ */
+function detectConflictingLaunchdLabels(currentLabel: string): string[] {
+  try {
+    const output = execSync('launchctl list', { encoding: 'utf-8' });
+    return output
+      .split('\n')
+      .map((line) => line.trim().split(/\s+/).pop() || '')
+      .filter((label) => /nanoclaw/i.test(label) && label !== currentLabel);
+  } catch {
+    return [];
+  }
+}
+
 function setupLaunchd(
   projectRoot: string,
   nodePath: string,
   homeDir: string,
 ): void {
+  const label = 'com.nanoclaw';
   const plistPath = path.join(
     homeDir,
     'Library',
     'LaunchAgents',
-    'com.nanoclaw.plist',
+    `${label}.plist`,
   );
   fs.mkdirSync(path.dirname(plistPath), { recursive: true });
+
+  const conflictingLabels = detectConflictingLaunchdLabels(label);
+  if (conflictingLabels.length > 0) {
+    logger.warn(
+      { conflictingLabels },
+      'Found other loaded launchd labels that look like NanoClaw. ' +
+        'If these are leftovers from an old install, both may run at once ' +
+        'and process the same messages twice. Check `launchctl list | grep nanoclaw` ' +
+        'and unload the stale one (find its plist under ~/Library/LaunchAgents/) before continuing.',
+    );
+  }
 
   const plist = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.nanoclaw</string>
+    <string>${label}</string>
     <key>ProgramArguments</key>
     <array>
         <string>${nodePath}</string>
@@ -128,7 +160,7 @@ function setupLaunchd(
   let serviceLoaded = false;
   try {
     const output = execSync('launchctl list', { encoding: 'utf-8' });
-    serviceLoaded = output.includes('com.nanoclaw');
+    serviceLoaded = output.includes(label);
   } catch {
     // launchctl list failed
   }
@@ -139,6 +171,7 @@ function setupLaunchd(
     PROJECT_PATH: projectRoot,
     PLIST_PATH: plistPath,
     SERVICE_LOADED: serviceLoaded,
+    ...(conflictingLabels.length > 0 ? { CONFLICTING_LABELS: conflictingLabels } : {}),
     STATUS: 'success',
     LOG: 'logs/setup.log',
   });

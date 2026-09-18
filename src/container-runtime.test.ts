@@ -49,10 +49,10 @@ describe('stopContainer', () => {
 // --- ensureContainerRuntimeRunning ---
 
 describe('ensureContainerRuntimeRunning', () => {
-  it('does nothing when runtime is already running', () => {
+  it('does nothing when runtime is already running', async () => {
     mockExecSync.mockReturnValueOnce('');
 
-    ensureContainerRuntimeRunning();
+    await ensureContainerRuntimeRunning();
 
     expect(mockExecSync).toHaveBeenCalledTimes(1);
     expect(mockExecSync).toHaveBeenCalledWith(`${CONTAINER_RUNTIME_BIN} info`, {
@@ -64,15 +64,49 @@ describe('ensureContainerRuntimeRunning', () => {
     );
   });
 
-  it('throws when docker info fails', () => {
-    mockExecSync.mockImplementationOnce(() => {
+  it('throws once maxWaitMs elapses and docker info keeps failing', async () => {
+    mockExecSync.mockImplementation(() => {
       throw new Error('Cannot connect to the Docker daemon');
     });
 
-    expect(() => ensureContainerRuntimeRunning()).toThrow(
-      'Container runtime is required but failed to start',
-    );
+    await expect(
+      ensureContainerRuntimeRunning({ maxWaitMs: 0 }),
+    ).rejects.toThrow('Container runtime is required but failed to start');
     expect(logger.error).toHaveBeenCalled();
+    // Single attempt: deadline already passed before the first retry wait.
+    expect(mockExecSync).toHaveBeenCalledTimes(1);
+  });
+
+  it('retries with backoff and succeeds once the runtime becomes available', async () => {
+    vi.useFakeTimers();
+    try {
+      mockExecSync
+        .mockImplementationOnce(() => {
+          throw new Error('not ready');
+        })
+        .mockImplementationOnce(() => {
+          throw new Error('not ready');
+        })
+        .mockReturnValueOnce('');
+
+      const promise = ensureContainerRuntimeRunning({
+        pollIntervalMs: 1000,
+        maxWaitMs: 10000,
+      });
+
+      await vi.advanceTimersByTimeAsync(1000);
+      await vi.advanceTimersByTimeAsync(1000);
+      await promise;
+
+      expect(mockExecSync).toHaveBeenCalledTimes(3);
+      expect(logger.warn).toHaveBeenCalledTimes(2);
+      expect(logger.info).toHaveBeenCalledWith(
+        { attempt: 3 },
+        'Container runtime became available',
+      );
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });
 
